@@ -15,7 +15,7 @@ object Main:
 
   def main(args: Array[String]): Unit =
     if args.length != 2 then
-      error("Usage: SSG <inputDirectoryName> <outputDirectoryName")
+      error("Usage: dssg.Main <inputDirectoryName> <outputDirectoryName")
 
     val inputDirectory = File(args(0))
     if !(inputDirectory.isDirectory && inputDirectory.canRead) then
