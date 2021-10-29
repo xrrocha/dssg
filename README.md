@@ -2,11 +2,53 @@
 
 Just convert my files and shut the f..k up!
 
-_I_ dictate the directory structure and everything else.
+_I_, alone, dictate the directory structure and everything else!
+
+## Usage
+
+If you have the following directory structure:
+
+```
+input-dir
+├── comment.md # Look ma: Markdown
+├── css
+│   └── style.scss # Look ma: SASS
+├── img
+│   └── photo.jpg
+├── index.ad # Look ma: AsciiDoc
+└── summary.adoc # Look ma: More AsciiDoc
+```
+
+Then the command:
+
+```bash
+dssg input-dir/ output-dir/
+```
+
+will [re]build directory `output-dir` to contain:
+
+```
+output-dir
+├── comment.html # Look ma: HTML from Markdown
+├── css
+│   └── style.css # Look ma: CSS from SASS
+├── img
+│   └── photo.jpg # Look ma: unchanged!
+├── index.html # Look ma: HTML from AsciiDoc
+└── summary.html # Look ma: HTML from AsciiDoc
+```
+
+That's it: no complicated directory structure, no `yaml/json` configuration files, no non-sense, no BS!
+
+## Release Files
+
+For your convenience, directory `releases` contains ready-made executables:
+
+- Scala jar
+- Java fat jar
+- Native executable (for `amd64/linux` only)
 
 ## Build Options
-
-For convenience, directory `releases` contains ready-made executables (native images are `amd64/linux` only.)
 
 The brave may build this utility as:
 
