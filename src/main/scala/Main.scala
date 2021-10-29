@@ -6,19 +6,26 @@ import scala.collection.mutable.ArrayBuffer
 object Main:
 
   /**
-   * Builders below require their corresponding commands to be installed in the OS.
-   * If a particular builder is not used, it's safe for it not to be installed.
+   * For builders below to be exercised their corresponding commands must be installed in the OS.
+   * If a particular builder is not used, then it's safe for it not to be installed.
    *
    * Add, remove and customize to your liking or OS requirements.
    */
   val builderMappers = Seq(
-    // Source extension, target extension, OS builder command
+    // Source extension(s), target extension, OS builder command
     BuilderMapper("scss", "css", OSCommandBuilder((in, out) => s"sass $in $out")),
-    BuilderMapper("ad", "html", OSCommandBuilder((in, out) => s"asciidoctor -o $out $in")),
     BuilderMapper("md", "html", OSCommandBuilder((in, out) => s"bash -c 'markdown $in > $out'")),
+    BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor -o $out $in")),
   )
-  val builderMappersByInputExtension = builderMappers.map(b => (b.inputExtension, b)).toMap
-  val builderMappersByOutputExtension = builderMappers.groupBy(_.outputExtension)
+  val builderMappersByInputExtension: Map[String, BuilderMapper] =
+    builderMappers
+      .flatMap(bm => bm.inputExtensions.map((_, bm)))
+      .toMap
+  val builderMappersByOutputExtension: Map[String, Seq[BuilderMapper]] =
+    builderMappers
+      .map(bm => (bm.outputExtension, bm))
+      .groupBy(_._1).view.mapValues(_.map(_._2))
+      .toMap
 
   def main(args: Array[String]): Unit =
     if args.length != 2 then
@@ -101,9 +108,9 @@ object Main:
                   case Some(builderMappers) =>
                     val inputFile =
                       builderMappers
-                        .map(bm => File(inputDirectory, s"$baseName.${bm.inputExtension}"))
+                        .flatMap(bm => bm.inputExtensions.map(ie => File(inputDirectory, s"$baseName.$ie")))
                         .find(_.exists())
-                        .getOrElse(File(inputDirectory, s"$baseName.${builderMappers.head.inputExtension}"))
+                        .getOrElse(File(inputDirectory, s"$baseName.${builderMappers.head.inputExtensions.head}"))
                     (outputFile, inputFile)
         }
         .filterNot((_, inputFile) => inputFile.exists())
@@ -150,7 +157,11 @@ case class Delete(file: File) extends Action :
     if file.isDirectory then file.listFiles().foreach(delete)
     if !file.delete() then log(s"Can't delete ${file.getAbsolutePath}")
 
-case class BuilderMapper(inputExtension: String, outputExtension: String, builder: Builder)
+case class BuilderMapper(inputExtensions: Seq[String], outputExtension: String, builder: Builder)
+
+object BuilderMapper:
+  def apply(inputExtension: String, outputExtension: String, builder: Builder) =
+    new BuilderMapper(Seq(inputExtension), outputExtension, builder)
 
 extension (file: File)
   def splitByExtension: (String, Option[String]) =
