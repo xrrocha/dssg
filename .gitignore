@@ -1,0 +1,9 @@
+.attic/
+.bsp/
+.idea/
+*.lck
+.local/
+*.log
+.project/project
+.project/target
+target/
