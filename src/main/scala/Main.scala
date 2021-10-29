@@ -5,7 +5,14 @@ import scala.collection.mutable.ArrayBuffer
 
 object Main:
 
+  /**
+   * Builders below require their corresponding commands to be installed in the OS.
+   * If a particular builder is not used, it's safe for it not to be installed.
+   *
+   * Add, remove and customize to your liking or OS requirements.
+   */
   val builderMappers = Seq(
+    // Source extension, target extension, OS builder command
     BuilderMapper("scss", "css", OSCommandBuilder((in, out) => s"sass $in $out")),
     BuilderMapper("ad", "html", OSCommandBuilder((in, out) => s"asciidoctor -o $out $in")),
     BuilderMapper("md", "html", OSCommandBuilder((in, out) => s"bash -c 'markdown $in > $out'")),
