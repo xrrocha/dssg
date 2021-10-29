@@ -1,0 +1,16 @@
+
+# - One config per line
+# - Fields separated by one or more blanks
+# - Field contents:
+#   1) Comma-separated list of input extensions (no intervening spaces)
+#   2) Output extension
+#   3) Rest of Line: command line
+#      Substitutions:
+#      %i -> input file  (required)
+#      %o -> output file (optional, depending on actual command)
+#      Use double percentage sign to escape literal if needed (%%i, %%o)
+
+# Input extension(s)  # Output extension  # Command line template
+scss                  css                 sass %i %o
+ad,adoc               html                asciidoctor -o %o %i
+md                    html                bash -c 'markdown %i > %o'

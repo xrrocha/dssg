@@ -1,15 +1,22 @@
 # Dead-simple Site Generator
 
-Just convert my files and shut the f..k up!
-
-_I_, alone, dictate the directory structure and everything else!
+Motto: _Just convert my files and shut the f..k up!_
 
 ## Usage
 
-If you have the following directory structure:
+`dssg` recursively copies over an input directory onto an output directory, such that:
+
+- Input files with registered extensions are converted to their target representation in the output directory. For 
+  example, markdown files  (extension `md`) are converted to HTML (extension `html`)
+- Input files with unregistered (or no) extensions are copied verbatim to the output directory. This includes 
+  empty directories
+- Files and directories originally present in the output directory but not in the input directory are deleted
+- Conversion commands are executed only when input files have changed more recently that any output file counterparts
+
+Thus, if you have the following `input-directory` structure:
 
 ```
-input-dir
+input-directory
 ├── comment.md # Look ma: Markdown
 ├── css
 │   └── style.scss # Look ma: SASS
@@ -19,13 +26,13 @@ input-dir
 └── summary.adoc # Look ma: More AsciiDoc
 ```
 
-Then the command:
+then the command:
 
 ```bash
-dssg input-dir/ output-dir/
+dssg input-directory/ output-dir/
 ```
 
-will [re]build directory `output-dir` to contain:
+will rebuild directory `output-directory` (creating it if needed) so that it contains:
 
 ```
 output-dir
@@ -33,12 +40,51 @@ output-dir
 ├── css
 │   └── style.css # Look ma: CSS from SASS
 ├── img
-│   └── photo.jpg # Look ma: unchanged!
+│   └── photo.jpg # Look ma: copied verbatim!
 ├── index.html # Look ma: HTML from AsciiDoc
 └── summary.html # Look ma: HTML from AsciiDoc
 ```
 
-That's it: no complicated directory structure, no `yaml/json` configuration files, no non-sense, no BS!
+That's it: no mandated directory structure, no complex configuration files, no BS!
+
+The out-of-the-box configuration supports:
+
+- SASS (npm `sass`)
+- AsciiDoc (`asciidoctor`)
+- Markdown (Linux `markdown`)
+
+To support other conversions some simple configuration is needed as shown next.
+
+## Simple Configuration
+
+Say you just want to convert Pug and AsciiDoc files. Your configuration file would look like:
+
+```
+# File: config.txt
+# - Empty lines are ignored
+# - Lines starting with '#' are comments
+# - Only one configuration per line
+# - Fields separated by one or more blanks
+# - Field contents:
+#   1) Comma-separated list of input extensions (no intervening spaces)
+#   2) Output extension
+#   3) Rest of Line: converter command line invocation
+#      Substitutions:
+#      %i -> input file name  (required)
+#      %o -> output file name (optional, depending on actual command)
+#      Use double percentage sign to escape literal if needed (%%i, %%o)
+
+# Now the real meat!
+# Input extension(s)  # Output extension  # Command line template
+pug                   html                bash -c 'pug < %i > %o'
+ad,adoc               html                asciidoctor -o %o %i
+```
+
+Given this configuration file, the command line incantation would be:
+
+```bash
+dssg config.txt input-directory output-directory
+```
 
 ## Release Files
 
