@@ -6,9 +6,9 @@ import scala.collection.mutable.ArrayBuffer
 object Main:
 
   val builderMappers = Seq(
+    BuilderMapper("scss", "css", OSCommandBuilder((in, out) => s"sass $in $out")),
     BuilderMapper("ad", "html", OSCommandBuilder((in, out) => s"asciidoctor -o $out $in")),
     BuilderMapper("md", "html", OSCommandBuilder((in, out) => s"bash -c 'markdown $in > $out'")),
-    BuilderMapper("scss", "css", OSCommandBuilder((in, out) => s"sass $in $out")),
   )
   val builderMappersByInputExtension = builderMappers.map(b => (b.inputExtension, b)).toMap
   val builderMappersByOutputExtension = builderMappers.groupBy(_.outputExtension)
@@ -81,9 +81,8 @@ object Main:
     if outputDirectory.exists() then
       outputDirectory.listFiles()
         .map(outputFile => (outputFile, File(inputDirectory, outputFile.getName)))
-        .filterNot { (outputFile, inputFile) =>
-          (outputFile.isFile && inputFile.isFile) || (outputFile.isDirectory && inputFile.isDirectory)
-        }
+        .filterNot((outputFile, inputFile) =>
+          (outputFile.isFile && inputFile.isFile) || (outputFile.isDirectory && inputFile.isDirectory))
         .map { (outputFile, inputFile) =>
           if outputFile.isDirectory then (outputFile, inputFile)
           else
@@ -100,10 +99,8 @@ object Main:
                         .getOrElse(File(inputDirectory, s"$baseName.${builderMappers.head.inputExtension}"))
                     (outputFile, inputFile)
         }
-        .filterNot { (_, inputFile) => inputFile.exists() }
-        .foreach { (outputFile, _) =>
-          actions += Delete(outputFile)
-        }
+        .filterNot((_, inputFile) => inputFile.exists())
+        .foreach((outputFile, _) => actions += Delete(outputFile))
 
 trait Builder:
   def build(inputFile: File, outputFile: File): Unit
