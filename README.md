@@ -62,13 +62,16 @@ Out of the box, `dssg` supports:
 | Markdown | `pandoc -s -o %o %i` | Linux:&#9;&#9;&#9;`apt install pandoc` <br>Mac:&#9;&#9;&#9;`brew install pandoc` <br>Windows:&#9;`choco install pandoc` |
 
 👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use! Also, you may
-choose converters other than the ones listed above; read on
+choose converters other than the ones listed above; read on.
+
+Say you want a customized SASS conversion, a new conversion of your own and a different Markdown processor. Your
+configuration file may look like:
 
 ```
 # Input extension(s)  # Output extension  # Command line template
 scss,sass             html                sass --no-source-map %i %o
 own                   html                sh -c 'my-own.sh < %o > %i'
-md                    html                markdown < %o > %i'
+md                    html                alt-markdown < %o > %i'
 ```
 
 When specifying a configuration file, the `dssg` command line incantation is, simply:
