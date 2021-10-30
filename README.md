@@ -113,19 +113,19 @@ configuration to override built-in conversions when needed.
 - A stand-alone, native executable with no dependencies on the JVM
 
 ```bash
-dssg  [-n | --no-delete] [configuration-file] input-directory output-directory
+$ dssg ...
 ```
 
 - A Java-only, fat jar requiring a 1.8+ JVM  (but not Scala) in the runtime environment
 
 ```bash
-java -jar dssg-assembly-1.0.jar dssg.Main [-n | --no-delete]  [configuration-file] input-directory output-directory
+$ java -jar dssg-assembly-1.0.jar dssg.Main ...
 ```
 
 - A Scala regular jar requiring both the 1.8+ JVM and 3.0+ Scala in the runtime environment
 
 ```bash
-scala -classpath dssg_3-1.0.jar dssg.Main [-n | --no-delete] [configuration-file] input-directory output-directory
+$ scala -classpath dssg_3-1.0.jar dssg.Main ...
 ```
 
 ## Known Issues
@@ -133,14 +133,6 @@ scala -classpath dssg_3-1.0.jar dssg.Main [-n | --no-delete] [configuration-file
 - Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
 - Converters might generate other files in addition to the output one (e.g. `sass`'s map files). These may be deleted on
 subsequent rebuilds if you don't specify `--no-delete`
-
-## Release Files
-
-For your convenience, directory `releases` contains ready-made executables:
-
-- Scala jar
-- Java fat jar
-- Native executable (for `amd64/linux` only)
 
 ___
 
