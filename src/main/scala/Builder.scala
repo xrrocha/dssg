@@ -33,7 +33,7 @@ object BuilderMapper:
   private val FieldRegex = """^(\S+)\s+(\S+)\s+([^%].*)$""".r
 
   val DefaultMappers = Seq(
-    BuilderMapper(Seq("scss"),       "css",  OSCommandBuilder((in, out) => s"sass $in $out")),
+    BuilderMapper(Seq("scss"),       "css",  OSCommandBuilder((in, out) => s"sass --no-source-map $in $out")),
     BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor --out-file $out $in")),
     BuilderMapper(Seq("ts"),         "js",   OSCommandBuilder((in, out) => s"npx swc --filename $in --out-file $out")),
     BuilderMapper(Seq("md"),         "html", OSCommandBuilder((in, out) => s"pandoc --standalone --output $out $in")))

@@ -6,14 +6,18 @@ import scala.util.{Failure, Success}
 object Main:
   def main(args: Array[String]): Unit =
 
+    val (delete, effectiveArgs) =
+      if args.nonEmpty && (args(0) == "-n" || args(0) == "--no-delete") then (false, args.drop(1))
+      else (true, args)
+
     val (builderMapperResult, inputFilename, outputFilename) =
-      args.length match
+      effectiveArgs.length match
         case 2 =>
-          (Success(BuilderMapper.DefaultMappers), args(0), args(1))
+          (Success(BuilderMapper.DefaultMappers), effectiveArgs(0), effectiveArgs(1))
         case 3 =>
-          (BuilderMapper.fromConfigFile(args(0)), args(1), args(2))
+          (BuilderMapper.fromConfigFile(effectiveArgs(0)), effectiveArgs(1), effectiveArgs(2))
         case _ =>
-          error("Usage: dssg [<configFile>] <inputDirectoryName> <outputDirectoryName>")
+          error("Usage: dssg [-n|--no-delete] [<configFile>] <inputDirectoryName> <outputDirectoryName>")
 
     val builderMappers = builderMapperResult match
       case Success(builderMappers) => BuilderMapper.DefaultMappers ++ builderMappers
@@ -27,7 +31,7 @@ object Main:
     expect(outputDirectory.isDirectory && inputDirectory.canWrite, s"Can't access output directory $inputDirectory")
 
     val traverser = Traverser(builderMappers)
-    val plan = traverser.traverse(inputDirectory, outputDirectory)
+    val plan = traverser.traverse(inputDirectory, outputDirectory, delete)
     // TODO Plan could be executed in stages/parallel
     plan.foreach { action =>
       log(action)

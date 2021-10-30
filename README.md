@@ -14,7 +14,7 @@ convert my files and get out of the way_.
 - Input files with an unregistered (or no) extension are copied verbatim to the output directory. This includes empty
   directories
 - Conversion commands are executed only when input files have changed more recently that any output file counterparts
-- Files and directories originally present in the output directory but not in the input directory _are deleted_
+- Files and directories originally present in the output directory but not in the input directory are deleted by default (unless `--no-delete` is in effect, see below)
 
 Thus, if you have the following `input-directory` structure:
 
@@ -50,6 +50,15 @@ output-dir
 
 That's it: no mandated directory structure, no complex configuration files, no BS!
 
+## Skipping Orphan Output File Deletion
+
+If you want to retain output files not corresponding to any input file then pass the `--no-delete` (aka `-n`) flag 
+on command invocation:
+
+```bash
+dssg --no-delete input-directory output-directory
+```
+
 ## Simple Configuration
 
 Out of the box, `dssg` supports:
@@ -59,7 +68,7 @@ Out of the box, `dssg` supports:
 | SASS   | `sass %i %o`  | `npm i -g sass` |
 | Typescript | `npx swc -f %i -o %o` | `npm i -D @swc/core @swc/cli` |
 | AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
-| Markdown | `pandoc -s -o %o %i` | Linux:&#9;&#9;&#9;`apt install pandoc` <br>Mac:&#9;&#9;&#9;`brew install pandoc` <br>Windows:&#9;`choco install pandoc` |
+| Markdown | `pandoc -s -o %o %i` | Linux: `apt install pandoc` <br>Mac: `brew install pandoc` <br>Windows: `choco install pandoc` |
 
 👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use! Also, you may
 choose converters other than the ones listed above; read on.
@@ -74,21 +83,21 @@ own                   html                sh -c 'my-own.sh < %o > %i'
 md                    html                alt-markdown -i %i -o %o
 ```
 
-When specifying a configuration file, the `dssg` command line incantation is, simply:
+When specifying a configuration file, the `dssg` command line syntax is, simply:
 
 ```bash
-dssg configuration-file input-directory output-directory
+dssg [-n | --no-delete] configuration-file input-directory output-directory
 ```
 
-In the configuration file:
+Simple configuration file syntax:
 
 - Empty lines are ignored
 - Lines starting with '#' are comments
-- Each configuration goes in its own line
+- Each configuration goes on its own line
 - Fields are separated by one or more blanks
-- Field contents are:
+- Configuration fields are:
     1. A comma-separated list of input extensions (no intervening spaces!)
-    2. The output extension
+    2. The target output extension
     3. The rest of line is the converter command template with substitutions:
         - `%i` ➜ the input file name (required)
         - `%o` ➜ the output file name (optional. depending on converter)
@@ -104,28 +113,26 @@ configuration to override built-in conversions when needed.
 - A stand-alone, native executable with no dependencies on the JVM
 
 ```bash
-dssg  [<configFile>] <inputDir> <outputDir>
+dssg  [-n | --no-delete] [configuration-file] input-directory output-directory
 ```
 
 - A Java-only, fat jar requiring a 1.8+ JVM  (but not Scala) in the runtime environment
 
 ```bash
-java -jar dssg-assembly-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
+java -jar dssg-assembly-1.0.jar dssg.Main [-n | --no-delete]  [configuration-file] input-directory output-directory
 ```
 
 - A Scala regular jar requiring both the 1.8+ JVM and 3.0+ Scala in the runtime environment
 
 ```bash
-scala -classpath dssg_3-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
+scala -classpath dssg_3-1.0.jar dssg.Main [-n | --no-delete] [configuration-file] input-directory output-directory
 ```
 
-## Known Limitations
+## Known Issues
 
 - Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
 - Converters might generate other files in addition to the output one (e.g. `sass`'s map files). These may be deleted on
-  subsequent rebuilds
-
-___
+subsequent rebuilds if you don't specify `--no-delete`
 
 ## Release Files
 
@@ -134,6 +141,8 @@ For your convenience, directory `releases` contains ready-made executables:
 - Scala jar
 - Java fat jar
 - Native executable (for `amd64/linux` only)
+
+___
 
 ## Build Options
 
@@ -146,7 +155,7 @@ The brave may build this utility as:
 ### 1. Building a native image
 
 This is a bit more involved, but it's worth the effort as it gives you a faster, portable, native image requiring no
-Java or Scala at runtime!
+Java or Scala installation at runtime!
 
 ### 1.1. Install GraalVM
 
@@ -191,7 +200,7 @@ This will create an executable file: `./target/graalvm-nartive-image/dssg`
 Once the native image is created, simply run it with:
 
 ```bash
-dssg  [<configFile>] <inputDir> <outputDir>
+dssg [-n | --no-delete] [configuration-file] input-directory output-directory
 ```
 
 ### 2. Building a Java Fat Jar File
@@ -207,7 +216,7 @@ This will create a fat jar: `./target/scala-3.0.2/dssg-assembly-1.0.jar`
 Run with
 
 ```bash
-java -jar dssg-assembly-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
+java -jar dssg-assembly-1.0.jar dssg.Main [-n | --no-delete] [configuration-file] input-directory output-directory
 ```
 
 ### 3. Building a Scala Jar File
@@ -223,5 +232,5 @@ This will create a regular jar: `./target/scala-3.0.2/dssg_3-1.0.jar`
 Run with:
 
 ```bash
-scala -classpath dssg_3-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
+scala -classpath dssg_3-1.0.jar dssg.Main [-n | --no-delete] [configuration-file] input-directory output-directory
 ```
