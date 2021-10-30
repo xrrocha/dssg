@@ -1,6 +1,7 @@
 # Dead-simple Site Generator
 
-Motto: _Just convert my files and shut the f..k up!_
+`dssg` is a minimalistic site generator imposing no directory structure or complex configuration. Its motto is: 
+_just convert my files and get out of the way_.
 
 ## Usage
 
@@ -8,84 +9,111 @@ Motto: _Just convert my files and shut the f..k up!_
 
 - Input files with registered extensions are converted to their target representation in the output directory. For 
   example, markdown files  (extension `md`) are converted to HTML (extension `html`)
-- Input files with unregistered (or no) extensions are copied verbatim to the output directory. This includes 
+- Input files with an unregistered (or no) extension are copied verbatim to the output directory. This includes 
   empty directories
-- Files and directories originally present in the output directory but not in the input directory are deleted
 - Conversion commands are executed only when input files have changed more recently that any output file counterparts
+- Files and directories originally present in the output directory but not in the input directory are deleted!
 
 Thus, if you have the following `input-directory` structure:
 
 ```
 input-directory
-├── comment.md # Look ma: Markdown
+├── comment.md               # Markdown
 ├── css
-│   └── style.scss # Look ma: SASS
+│   └── style.scss           # SASS
 ├── img
-│   └── photo.jpg
-├── index.ad # Look ma: AsciiDoc
-└── summary.adoc # Look ma: More AsciiDoc
+│   └── diagram.jpg          # No conversion
+├── index.ad                 # AsciiDoc
+└── summary.adoc             # More AsciiDoc
 ```
 
 then the command:
 
 ```bash
-dssg input-directory/ output-dir/
+dssg input-directory output-directory
 ```
 
 will rebuild directory `output-directory` (creating it if needed) so that it contains:
 
 ```
 output-dir
-├── comment.html # Look ma: HTML from Markdown
+├── comment.html             # HTML from Markdown
 ├── css
-│   └── style.css # Look ma: CSS from SASS
+│   └── style.css            # CSS from SASS
 ├── img
-│   └── photo.jpg # Look ma: copied verbatim!
-├── index.html # Look ma: HTML from AsciiDoc
-└── summary.html # Look ma: HTML from AsciiDoc
+│   └── diagram.jpg          # Copied verbatim
+├── index.html               # HTML from AsciiDoc
+└── summary.html             # HTML from AsciiDoc
 ```
 
 That's it: no mandated directory structure, no complex configuration files, no BS!
 
-The out-of-the-box configuration supports:
-
-- SASS (npm `sass`)
-- AsciiDoc (`asciidoctor`)
-- Markdown (Linux `markdown`)
-
-To support other conversions some simple configuration is needed as shown next.
-
 ## Simple Configuration
 
-Say you just want to convert Pug and AsciiDoc files. Your configuration file would look like:
+Out of the box, `dssg` supports:
+
+| Format | Command Line Used | Install with |
+| ------ | ----------------- | ------------ |
+| SASS   | `sass %i %o`  | `npm i -g sass` |
+| Typescript | `npx swc -f %i -o %o` | `npm i -D @swc/core @swc/cli` |
+| AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
+| Markdown | `pandoc -s -o %o %i` | Linux:&#9;&#9;&#9;`apt install pandoc` <br>Mac:&#9;&#9;&#9;`brew install pandoc` <br>Windows:&#9;`choco install pandoc` |
+
+👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use!
+
+Say you want a customized SASS conversion and a new conversion of your own. Your configuration file may look like:
 
 ```
-# File: config.txt
-# - Empty lines are ignored
-# - Lines starting with '#' are comments
-# - Only one configuration per line
-# - Fields separated by one or more blanks
-# - Field contents:
-#   1) Comma-separated list of input extensions (no intervening spaces)
-#   2) Output extension
-#   3) Rest of Line: converter command line invocation
-#      Substitutions:
-#      %i -> input file name  (required)
-#      %o -> output file name (optional, depending on actual command)
-#      Use double percentage sign to escape literal if needed (%%i, %%o)
-
-# Now the real meat!
 # Input extension(s)  # Output extension  # Command line template
-pug                   html                bash -c 'pug < %i > %o'
-ad,adoc               html                asciidoctor -o %o %i
+scss,sass             html                sass --no-source-map %i %o
+own                   html                sh -c 'my-own.sh < %o > %i'
 ```
 
-Given this configuration file, the command line incantation would be:
+When specifying a configuration file, the `dssg` command line incantation is, simply:
 
 ```bash
-dssg config.txt input-directory output-directory
+dssg configuration-file input-directory output-directory
 ```
 
+In the configuration file:
+
+- Empty lines are ignored
+- Lines starting with '#' are comments
+- Each configuration goes in its own line
+- Fields are separated by one or more blanks
+- Field contents are:
+  1. A comma-separated list of input extensions (no intervening spaces!)
+  2. The output extension
+  3. The rest of line is the converter command template with substitutions:
+     - `%i` ➜ the input file name (required)
+     - `%o` ➜ the output file name (optional. depending on converter)
+     - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
+
+If the same input extension appears more than once in the file, the last occurrence wins. This policy enables user 
+configuration to override built-in conversions when needed.
+
+## More on Usage
+
+`dssg` comes in three flavors:
+
+- A stand-alone, native executable with no dependencies on the JVM
+```bash
+dssg  [<configFile>] <inputDir> <outputDir>
+```
+- A Java-only, fat jar requiring a 1.8+ JVM  (but not Scala) in the runtime environment
+```bash
+java -jar dssg-assembly-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
+```
+- A Scala regular jar requiring both the 1.8+ JVM and 3.0+ Scala in the runtime environment
+```bash
+scala -classpath dssg_3-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
+```
+
+## Known Limitations
+
+- Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
+
+___
 ## Release Files
 
 For your convenience, directory `releases` contains ready-made executables:
@@ -149,7 +177,7 @@ This will create an executable file: `./target/graalvm-nartive-image/dssg`
 Once the native image is created, simply run it with:
 
 ```bash
-dssg  <inputDir> <outputDir>
+dssg  [<configFile>] <inputDir> <outputDir>
 ```
 
 ### 2. Building a Java Fat Jar File
@@ -165,7 +193,7 @@ This will create a fat jar: `./target/scala-3.0.2/dssg-assembly-1.0.jar`
 Run with
 
 ```bash
-java -jar dssg-assembly-1.0.jar dssg.Main <inputDir> <outputDir>
+java -jar dssg-assembly-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
 ```
 
 ### 3. Building a Scala Jar File
@@ -181,5 +209,5 @@ This will create a regular jar: `./target/scala-3.0.2/dssg_3-1.0.jar`
 Run with:
 
 ```bash
-scala -classpath dssg_3-1.0.jar dssg.Main <inputDir> <outputDir>
+scala -classpath dssg_3-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
 ```
