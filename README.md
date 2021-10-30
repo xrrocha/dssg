@@ -63,9 +63,9 @@ dssg --no-delete input-directory output-directory
 
 Out of the box, `dssg` supports:
 
-| Format | Command Line Used | Install with |
-| ------ | ----------------- | ------------ |
-| SASS   | `sass %i %o`  | `npm i -g sass` |
+| Format | Internal Command Line | Install with |
+| ------ | --------------------- | ------------ |
+| SASS  | `sass %i %o`  | `npm i -g sass` |
 | Typescript | `npx swc -o %o %i` | `npm i -D @swc/core @swc/cli` |
 | AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
 | Markdown | `pandoc -s -o %o %i` | Linux: `apt install pandoc` <br>Mac: `brew install pandoc` <br>Windows: `choco install pandoc` |
