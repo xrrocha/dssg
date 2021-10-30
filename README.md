@@ -94,7 +94,7 @@ In the configuration file:
         - `%o` ➜ the output file name (optional. depending on converter)
         - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
 
-If the same input extension appears more than once in the file, the last occurrence wins. This policy enables user
+If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
 configuration to override built-in conversions when needed.
 
 ## More on Usage
