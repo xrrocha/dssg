@@ -8,9 +8,7 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
   private val builderMappersByInputExtension: Map[String, BuilderMapper] =
     builderMappers
       .flatMap(bm => bm.inputExtensions.map((_, bm)))
-      .groupBy(_._1)
-      .view
-      .mapValues(_.map(_._2).last)
+      .groupBy(_._1).view.mapValues(_.map(_._2).last)
       .toMap
 
   private val builderMappersByOutputExtension: Map[String, Seq[BuilderMapper]] =
@@ -28,6 +26,7 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
 
     val inputFiles = inputDirectory.listFiles()
     val outputFiles = inputFiles.map(inputFile => File(outputDirectory, inputFile.getName))
+
     inputFiles.zip(outputFiles).foreach { (inputFile, outputFile) =>
 
       (inputFile, outputFile) match

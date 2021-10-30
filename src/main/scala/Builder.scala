@@ -15,13 +15,13 @@ class OSCommandBuilder(commandTemplate: (String, String) => String) extends Buil
     import scala.sys.process.*
     val commandLine = commandTemplate(inputFile.getPath, outputFile.getPath)
     val errorOutputStream = ByteArrayOutputStream()
-    val process = commandLine run ProcessIO(_.close(), _.close(), InputStreamCollector(errorOutputStream))
+    val process = commandLine run ProcessIO(_.close(), _.close(), IOStreamCollector(errorOutputStream))
     val exitValue = process.exitValue()
     if exitValue != 0 then
       log(s"Warning: exit value $exitValue for $inputFile")
       log(errorOutputStream.toString)
 
-  class InputStreamCollector(outputStream: OutputStream) extends ((InputStream) => Unit) :
+  class IOStreamCollector(outputStream: OutputStream) extends ((InputStream) => Unit) :
     override def apply(inputStream: InputStream): Unit = inputStream.copyTo(outputStream)
 
 case class BuilderMapper(inputExtensions: Seq[String], outputExtension: String, builder: Builder)
