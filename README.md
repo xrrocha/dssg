@@ -71,7 +71,7 @@ configuration file may look like:
 # Input extension(s)  # Output extension  # Command line template
 scss,sass             html                sass --no-source-map %i %o
 own                   html                sh -c 'my-own.sh < %o > %i'
-md                    html                alt-markdown < %o > %i'
+md                    html                alt-markdown -i %i -o %o
 ```
 
 When specifying a configuration file, the `dssg` command line incantation is, simply:
