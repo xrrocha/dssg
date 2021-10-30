@@ -28,24 +28,24 @@ case class BuilderMapper(inputExtensions: Seq[String], outputExtension: String, 
 
 object BuilderMapper:
 
+  val DefaultMappers = Seq(
+    BuilderMapper(Seq("scss"), "css", OSCommandBuilder((in, out) => s"sass --no-source-map $in $out")),
+    BuilderMapper(Seq("ts"), "js", OSCommandBuilder((in, out) => s"npx swc --out-file $out $in")),
+    BuilderMapper(Seq("md"), "html", OSCommandBuilder((in, out) => s"pandoc --standalone --output $out $in")),
+    BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor --out-file $out $in")))
+
   private val InputRegex = "([^%])%i".r
   private val OutputRegex = "([^%])%o".r
   private val FieldRegex = """^(\S+)\s+(\S+)\s+([^%].*)$""".r
-
-  val DefaultMappers = Seq(
-    BuilderMapper(Seq("scss"),       "css",  OSCommandBuilder((in, out) => s"sass --no-source-map $in $out")),
-    BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor --out-file $out $in")),
-    BuilderMapper(Seq("ts"),         "js",   OSCommandBuilder((in, out) => s"npx swc --filename $in --out-file $out")),
-    BuilderMapper(Seq("md"),         "html", OSCommandBuilder((in, out) => s"pandoc --standalone --output $out $in")))
 
   def fromConfigFile(filename: String): Try[Seq[BuilderMapper]] = Try {
     val file = File(filename)
     require(file.isFile && file.canRead, s"Can't access configuration file: $file")
 
-    fromLines(Source.fromFile(file).getLines()).toSeq
+    fromLines(Source.fromFile(file).getLines().toSeq)
   }
 
-  def fromLines(lines: Iterator[String]) =
+  def fromLines(lines: Seq[String]) =
     lines
       .zipWithIndex
       .map((line, index) => (line.trim, index + 1))
@@ -62,7 +62,7 @@ object BuilderMapper:
               OutputRegex.replaceAllIn(inputReplacement, s"$$1$outputFilename")
             BuilderMapper(inputExtensions, outputExtension, OSCommandBuilder(commandLineTemplate))
           case _ =>
-            sys.error(s"Invalid config line #$lineNumber: $line")
+            throw IllegalArgumentException(s"Invalid config line #$lineNumber: $line")
       }
 
 

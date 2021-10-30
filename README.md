@@ -66,7 +66,7 @@ Out of the box, `dssg` supports:
 | Format | Command Line Used | Install with |
 | ------ | ----------------- | ------------ |
 | SASS   | `sass %i %o`  | `npm i -g sass` |
-| Typescript | `npx swc -f %i -o %o` | `npm i -D @swc/core @swc/cli` |
+| Typescript | `npx swc -o %o %i` | `npm i -D @swc/core @swc/cli` |
 | AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
 | Markdown | `pandoc -s -o %o %i` | Linux: `apt install pandoc` <br>Mac: `brew install pandoc` <br>Windows: `choco install pandoc` |
 
@@ -78,7 +78,7 @@ configuration file may look like:
 
 ```
 # Input extension(s)  # Output extension  # Command line template
-scss,sass             html                sass --no-source-map %i %o
+scss,sass             html                sass source-map %i %o
 own                   html                sh -c 'my-own.sh < %o > %i'
 md                    html                alt-markdown -i %i -o %o
 ```

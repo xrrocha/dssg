@@ -17,10 +17,10 @@ object Main:
         case 3 =>
           (BuilderMapper.fromConfigFile(effectiveArgs(0)), effectiveArgs(1), effectiveArgs(2))
         case _ =>
-          error("Usage: dssg [-n|--no-delete] [<configFile>] <inputDirectoryName> <outputDirectoryName>")
+          error("Usage: dssg [-n | --no-delete] [configuration-file] input-directory output-directory")
 
     val builderMappers = builderMapperResult match
-      case Success(builderMappers) => BuilderMapper.DefaultMappers ++ builderMappers
+      case Success(builderMappers) => BuilderMapper.DefaultMappers ++ builderMappers // Allow overrides
       case Failure(exception) => error(s"Error processing configuration ${exception.getMessage}")
 
     val inputDirectory = File(inputFilename)
@@ -32,11 +32,12 @@ object Main:
 
     val traverser = Traverser(builderMappers)
     val plan = traverser.traverse(inputDirectory, outputDirectory, delete)
-    // TODO Plan could be executed in stages/parallel
+
     plan.foreach { action =>
       log(action)
       action.execute()
     }
+
     println(s"${plan.size} actions applied")
 
   def expect(condition: Boolean, message: String) = if !condition then error(message)

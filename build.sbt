@@ -9,6 +9,10 @@ lazy val root = project
     version := "1.0",
 
     scalaVersion := scala3Version,
+
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "3.2.10" % Test
+    )
   )
 
 graalVMNativeImageOptions ++= Seq(
