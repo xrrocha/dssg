@@ -8,7 +8,7 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
   private val builderMappersByInputExtension: Map[String, BuilderMapper] =
     builderMappers
       .flatMap(bm => bm.inputExtensions.map((_, bm)))
-      .groupBy(_._1).view.mapValues(_.map(_._2).last)
+      .groupBy(_._1).view.mapValues(_.map(_._2).last) // Last allows for override
       .toMap
 
   private val builderMappersByOutputExtension: Map[String, Seq[BuilderMapper]] =
