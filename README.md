@@ -1,6 +1,6 @@
-# Dead-simple Site Generator
-
 ![dssg](src/test/resources/logo.png)
+
+# Dead-simple Site Generator
 
 `dssg` is a minimalistic site generator imposing no directory structure or complex configuration. 
 Its motto? _Just convert my files and get out of the way_.
