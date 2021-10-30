@@ -1,7 +1,8 @@
 # Dead-simple Site Generator
 
-`dssg` is a minimalistic site generator imposing no directory structure or complex configuration. Its motto is: 
-_just convert my files and get out of the way_.
+<img alt="dssg" src="src/test/resources/logo.png" style="float: left;">
+`dssg` is a minimalistic site generator imposing no directory structure or complex configuration. Its motto? _Just  
+convert my files and get out of the way_.
 
 ## Usage
 
@@ -12,7 +13,7 @@ _just convert my files and get out of the way_.
 - Input files with an unregistered (or no) extension are copied verbatim to the output directory. This includes 
   empty directories
 - Conversion commands are executed only when input files have changed more recently that any output file counterparts
-- Files and directories originally present in the output directory but not in the input directory are deleted!
+- Files and directories originally present in the output directory but not in the input directory _are deleted_
 
 Thus, if you have the following `input-directory` structure:
 
@@ -33,7 +34,7 @@ then the command:
 dssg input-directory output-directory
 ```
 
-will rebuild directory `output-directory` (creating it if needed) so that it contains:
+will [re]build `output-directory` (creating it if needed) so that it contains:
 
 ```
 output-dir
@@ -112,6 +113,8 @@ scala -classpath dssg_3-1.0.jar dssg.Main  [<configFile>] <inputDir> <outputDir>
 ## Known Limitations
 
 - Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
+- Converters might generate other files in addition to the output one (e.g. `sass`'s map files). These may be deleted 
+  on subsequent rebuilds
 
 ___
 ## Release Files
