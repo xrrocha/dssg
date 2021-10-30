@@ -19,4 +19,4 @@ case class Delete(file: File) extends Action :
 
   private def delete(file: File): Unit =
     if file.isDirectory then file.listFiles().foreach(delete)
-    if !file.delete() then log(s"Can't delete $file")
+    if !file.delete() then log(s"Can't delete ${file.getPath}")
