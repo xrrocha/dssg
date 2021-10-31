@@ -51,24 +51,26 @@ That's it: no mandated directory structure, no complex configuration files, no B
 
 Out of the box, `dssg` supports the following formats:
 
-| Format | Internal Command Line | Install with |
-| ------ | --------------------- | ------------ |
-| AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
-| Markdown | `pandoc -s -o %o %i` | Linux: `apt install pandoc` <br>Mac: `brew install pandoc` <br>Windows: `choco install pandoc` |
-| Pug | `sh -c 'pug < %i  > %o'` | `npm i -g pug` |
-| SASS  | `sass %i %o`  | `npm i -g sass` |
-| Typescript | `npx swc -o %o %i` | `npm i -D @swc/core @swc/cli` |
+| Format | Install with |
+| ------ | --------------------- |
+| AsciiDoc | `npm i -g asciidoctor` |
+| Markdown | Linux:       `apt install pandoc` <br>Mac:         `brew install pandoc` <br>Windows: `choco install pandoc` |
+| Pug | `npm i -g pug` |
+| SASS  | `npm i -g sass` |
+| Typescript | `npm i -D @swc/core @swc/cli` |
 
 👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use! Also, you may
 choose converters other than the ones listed above; read on.
 
-Say you want to use a Pandoc Markdown template called _stencil_ and a new conversion type of your own. Your 
-configuration file may look like:
+The built-in `configuration.txt` resource file provisioning the above formats contains:
 
 ```
 # Input extension(s)  # Output extension  # Command line template
-md,markdown           html                pandoc --template=stencil -o %o %i
-mine                  html                sh -c 'my-own-converter.sh < %i > %o'
+ad,adoc               html                asciidoctor --out-file %o %i
+md                    html                pandoc --standalone --output %o %i
+pug                   html                sh -c 'pug < %i > %o'
+scss                  css                 sass --no-source-map %i %o
+ts                    js                  npx swc --out-file %o %i
 ```
 
 Each converter configuration goes on its own line. Empty lines and lines starting with `#` are ignored
@@ -81,8 +83,17 @@ Configuration fields (separated by one or more blanks) are:
    - `%i` ➜ the input file name
    - `%o` ➜ the output file name
 
-If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
+👉 If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
 configuration to override built-in conversions when needed.
+
+You can easily customize these defaults! Say you want to use a Pandoc Markdown template called _stencil_ and a new
+conversion type of your own. Your configuration file may look like:
+
+```
+# Input extension(s)  # Output extension  # Command line template
+md,markdown           html                pandoc --template=stencil -o %o %i
+mine                  html                sh -c 'my-own-converter.sh < %i > %o'
+```
 
 When specifying a configuration file, the `dssg` command line syntax is, simply:
 
@@ -162,6 +173,8 @@ sbt assembly
 ```
 
 ### 1.3. Build a Native Image
+
+👉 This step depends on GraalVM configuration files located under `./configs`
 
 Next, build the native image with:
 

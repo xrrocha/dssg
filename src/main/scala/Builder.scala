@@ -28,17 +28,15 @@ case class BuilderMapper(inputExtensions: Seq[String], outputExtension: String, 
 
 object BuilderMapper:
 
-  val DefaultMappers = Seq(
-    BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor --out-file $out $in")),
-    BuilderMapper(Seq("md"), "html", OSCommandBuilder((in, out) => s"pandoc --standalone --output $out $in")),
-    BuilderMapper(Seq("pug"), "html", OSCommandBuilder((in, out) => s"sh -c 'pug < $in > $out'")),
-    BuilderMapper(Seq("scss"), "css", OSCommandBuilder((in, out) => s"sass --no-source-map $in $out")),
-    BuilderMapper(Seq("ts"), "js", OSCommandBuilder((in, out) => s"npx swc --out-file $out $in")),
-  )
-
   private val InputPlaceholder = "%i"
   private val OutputPlaceholder = "%o"
-  private val FieldRegex = """(\S+)\s+(\S+)\s+([^%].*)""".r
+  private val FieldRegex = """(\S+)\s+(\S+)\s+(.*)""".r
+
+  val DefaultMappers =
+    val configurationFilename = "configuration.txt"
+    val is = getClass.getClassLoader.getResourceAsStream(configurationFilename)
+    require(is != null, s"Can't find configuration resource file: $configurationFilename")
+    fromLines(Source.fromInputStream(is).getLines().toSeq)
 
   def fromConfigFile(filename: String): Try[Seq[BuilderMapper]] = Try {
     val file = File(filename)
