@@ -24,8 +24,7 @@ input-directory
 │   └── style.scss           # SASS
 ├── img
 │   └── diagram.jpg          # No conversion
-├── index.ad                 # AsciiDoc
-└── summary.adoc             # More AsciiDoc
+└── index.ad                 # AsciiDoc
 ```
 
 then the command:
@@ -43,8 +42,7 @@ output-dir
 │   └── style.css            # CSS from SASS
 ├── img
 │   └── diagram.jpg          # Copied verbatim
-├── index.html               # HTML from AsciiDoc
-└── summary.html             # HTML from AsciiDoc
+└── index.html               # HTML from AsciiDoc
 ```
 
 That's it: no mandated directory structure, no complex configuration files, no BS!
