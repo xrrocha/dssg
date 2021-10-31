@@ -130,7 +130,7 @@ $ scala -classpath dssg_3-1.0.jar dssg.Main ...
 - There's no provision to exclude input files
 - There's no provision not to delete orphan output files
 - Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
-
+- Converters may generate additional files (e.g. `sass`'s map files.) These files may be deleted in subsequent builds
 ___
 
 ## Build Options
