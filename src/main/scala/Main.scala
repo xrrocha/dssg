@@ -16,7 +16,7 @@ object Main:
           error("Usage: dssg [-n | --no-delete] [configuration-file] input-directory output-directory")
 
     val builderMappers = builderMapperResult match
-      case Success(builderMappers) => BuilderMapper.DefaultMappers ++ builderMappers // Allow user overrides
+      case Success(builderMappers) => builderMappers
       case Failure(exception) => error(s"Error processing configuration ${exception.getMessage}")
 
     val inputDirectory = File(inputFilename)

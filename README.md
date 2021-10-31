@@ -49,7 +49,7 @@ That's it: no mandated directory structure, no complex configuration files, no B
 
 ## Simple Configuration
 
-Out of the box, `dssg` supports the following formats:
+Out of the box, without any configuration, `dssg` supports the following formats:
 
 | Format | Install with |
 | ------ | --------------------- |
