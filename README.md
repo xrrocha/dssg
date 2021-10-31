@@ -61,7 +61,7 @@ dssg --no-delete input-directory output-directory
 
 ## Simple Configuration
 
-Out of the box, `dssg` supports:
+Out of the box, `dssg` supports the following formats:
 
 | Format | Internal Command Line | Install with |
 | ------ | --------------------- | ------------ |
@@ -73,14 +73,13 @@ Out of the box, `dssg` supports:
 👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use! Also, you may
 choose converters other than the ones listed above; read on.
 
-Say you want a customized SASS conversion, a new conversion of your own and a different Markdown processor. Your
-configuration file may look like:
+Say you want a different Markdown processor, a customized SASS conversion, and a new conversion of your own. Your configuration file may look like:
 
 ```
 # Input extension(s)  # Output extension  # Command line template
-scss,sass             html                sass source-map %i %o
-own                   html                sh -c 'my-own.sh < %o > %i'
-md                    html                alt-markdown -i %i -o %o
+md,markdown           html                alt-markdown %i %o
+scss                  html                sass --source-map %i %o
+own                   html                sh -c 'my-very-own.sh < %o > %i'
 ```
 
 The configuration file syntax is:
