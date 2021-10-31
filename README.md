@@ -62,12 +62,12 @@ Out of the box, `dssg` supports the following formats:
 👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use! Also, you may
 choose converters other than the ones listed above; read on.
 
-Say you want to use some specific Pandoc Markdown template and a new conversion type of your own. Your configuration 
-file may look like:
+Say you want to use a Pandoc Markdown template called _stencil_ and a new conversion type of your own. Your 
+configuration file may look like:
 
 ```
 # Input extension(s)  # Output extension  # Command line template
-md,markdown           html                pandoc --template=specific -o %o %i
+md,markdown           html                pandoc --template=stencil -o %o %i
 mine                  html                sh -c 'my-own-converter.sh < %i > %o'
 ```
 
