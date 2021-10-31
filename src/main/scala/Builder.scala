@@ -36,7 +36,7 @@ object BuilderMapper:
 
   private val InputPlaceholder = "%i"
   private val OutputPlaceholder = "%o"
-  private val FieldRegex = """^(\S+)\s+(\S+)\s+([^%].*)$""".r
+  private val FieldRegex = """(\S+)\s+(\S+)\s+([^%].*)""".r
 
   def fromConfigFile(filename: String): Try[Seq[BuilderMapper]] = Try {
     val file = File(filename)
