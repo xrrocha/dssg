@@ -90,8 +90,8 @@ Configuration fields (separated by one or more blanks) are:
 1. A comma-separated list of input extensions (no intervening spaces!)
 2. The target output extension
 3. The rest of line is the converter command template with placeholders:
-   - `%i` ➜ the input file name (required)
-   - `%o` ➜ the output file name (optional, depending on converter)
+   - `%i` ➜ the input file name
+   - `%o` ➜ the output file name
    - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
 
 If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
