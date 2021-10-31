@@ -2,8 +2,9 @@
 
 # Dead-simple Site Generator
 
-`dssg` is a minimalistic site generator imposing no directory structure or complex configuration. Its motto? _Just
-convert my files and get out of the way_.
+`dssg` is a minimalistic site generator imposing no directory structure or complex configuration.
+
+The mantra here is: _«Just convert my files and get out of the way»_
 
 ## Usage
 
