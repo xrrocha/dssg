@@ -80,12 +80,12 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
                 builderMappersByOutputExtension.get(extension) match
                   case None => (outputFile, inputFile)
                   case Some(builderMappers) =>
-                    val inputFile =
+                    val sourceFile =
                       builderMappers
                         .flatMap(bm => bm.inputExtensions.map(ie => File(inputDirectory, s"$baseName.$ie")))
                         .find(_.exists())
                         .getOrElse(File(inputDirectory, s"$baseName.${builderMappers.head.inputExtensions.head}"))
-                    (outputFile, inputFile)
+                    (outputFile, sourceFile)
         }
         .filterNot((_, inputFile) => inputFile.exists())
         .foreach((outputFile, _) => actions += Delete(outputFile))
