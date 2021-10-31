@@ -91,9 +91,9 @@ The configuration file syntax is:
   1. A comma-separated list of input extensions (no intervening spaces!)
   2. The target output extension
   3. The rest of line is the converter command template with placeholders:
-     3.1. `%i` ➜ the input file name (required)
-     3.2. `%o` ➜ the output file name (optional, depending on converter)
-     3.3. Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
+     1. `%i` ➜ the input file name (required)
+     2. `%o` ➜ the output file name (optional, depending on converter)
+     3. Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
 
 If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
 configuration to override built-in conversions when needed.
