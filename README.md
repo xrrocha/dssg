@@ -83,8 +83,8 @@ Configuration fields (separated by one or more blanks) are:
    - `%i` ➜ the input file name
    - `%o` ➜ the output file name
 
-👉 If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
-configuration to override built-in conversions when needed.
+👉 If the same input extension is specified more than once, the last occurrence wins. This policy enables 
+user-provided configuration to override built-in conversions when needed.
 
 You can easily customize these defaults! 
 
@@ -116,13 +116,13 @@ $ dssg ...
 - A Java-only, fat jar requiring a 1.8+ JVM  (but not Scala) in the runtime environment
 
 ```bash
-$ java -jar dssg-assembly-1.0.jar dssg.Main ...
+$ java -jar dssg-assembly-0.1.0.jar dssg.Main ...
 ```
 
 - A Scala regular jar requiring both the 1.8+ JVM and 3.0+ Scala in the runtime environment
 
 ```bash
-$ scala -classpath dssg_3-1.0.jar dssg.Main ...
+$ scala -classpath dssg_3-0.1.0.jar dssg.Main ...
 ```
 
 ## Known Issues
@@ -130,7 +130,8 @@ $ scala -classpath dssg_3-1.0.jar dssg.Main ...
 - There's no provision to exclude input files
 - There's no provision not to delete orphan output files
 - Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
-- Converters may generate additional files (e.g. `sass`'s map files.) These files may be deleted in subsequent builds
+- Converters may generate additional files (e.g. `sass`'s sourcemap files.) These files may be deleted in subsequent 
+  builds
 ___
 
 ## Build Options
@@ -202,12 +203,12 @@ If you want just Java in your installation, not Scala, run:
 $ sbt assembly
 ```
 
-This will create a fat jar: `./target/scala-3.0.2/dssg-assembly-1.0.jar`
+This will create a fat jar: `./target/scala-3.0.2/dssg-assembly-0.1.0.jar`
 
 Run with
 
 ```bash
-$ java -jar dssg-assembly-1.0.jar dssg.Main [configuration-file] input-directory output-directory
+$ java -jar dssg-assembly-0.1.0.jar dssg.Main [configuration-file] input-directory output-directory
 ```
 
 ### 3. Building a Scala Jar File
@@ -218,10 +219,10 @@ Simplest build option, requires Scala in your runtime installation:
 sbt package
 ```
 
-This will create a regular jar: `./target/scala-3.0.2/dssg_3-1.0.jar`
+This will create a regular jar: `./target/scala-3.0.2/dssg_3-0.1.0.jar`
 
 Run with:
 
 ```bash
-$ scala -classpath dssg_3-1.0.jar dssg.Main [configuration-file] input-directory output-directory
+$ scala -classpath dssg_3-0.1.0.jar dssg.Main [configuration-file] input-directory output-directory
 ```
