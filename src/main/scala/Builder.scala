@@ -34,8 +34,8 @@ object BuilderMapper:
     BuilderMapper(Seq("md"), "html", OSCommandBuilder((in, out) => s"pandoc --standalone --output $out $in")),
     BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor --out-file $out $in")))
 
-  private val InputRegex = "([^%])%i".r
-  private val OutputRegex = "([^%])%o".r
+  private val InputPlaceholder = "%i"
+  private val OutputPlaceholder = "%o"
   private val FieldRegex = """^(\S+)\s+(\S+)\s+([^%].*)$""".r
 
   def fromConfigFile(filename: String): Try[Seq[BuilderMapper]] = Try {
@@ -55,14 +55,13 @@ object BuilderMapper:
           case FieldRegex(inputExtensionList, outputExtension, commandLine) =>
             require(containsPlaceholders(commandLine), s"Missing file reference(s) in config line #$lineNumber: $line")
             val inputExtensions = inputExtensionList.split(",").toSeq
-            // TODO Collect offsets here for performance
             val commandLineTemplate = (inputFilename: String, outputFilename: String) =>
-              val inputReplacement = InputRegex.replaceAllIn(commandLine, s"$$1$inputFilename")
-              OutputRegex.replaceAllIn(inputReplacement, s"$$1$outputFilename")
+              val inputReplacement = commandLine.replace(InputPlaceholder, inputFilename)
+              commandLine.replace(OutputPlaceholder, outputFilename)
             BuilderMapper(inputExtensions, outputExtension, OSCommandBuilder(commandLineTemplate))
           case _ =>
             throw IllegalArgumentException(s"Invalid config line #$lineNumber: $line")
       }
 
   def containsPlaceholders(commandLine: String) =
-    InputRegex.findFirstMatchIn(commandLine).isDefined && OutputRegex.findFirstMatchIn(commandLine).isDefined
+    commandLine.contains(InputPlaceholder) && commandLine.contains(OutputPlaceholder)
