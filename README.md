@@ -80,7 +80,7 @@ Say you want a different Markdown processor, a customized SASS conversion, and a
 # Input extension(s)  # Output extension  # Command line template
 md,markdown           html                alt-markdown %i %o
 scss                  html                sass --source-map %i %o
-own                   html                sh -c 'my-very-own.sh %i'
+own                   html                sh -c 'my-very-own.sh < %i > %o'
 ```
 
 The configuration file syntax is:
