@@ -34,7 +34,7 @@ then the command:
 dssg input-directory output-directory
 ```
 
-will [re]build `output-directory` (creating it if needed) so that it contains:
+will build `output-directory` so that it contains:
 
 ```
 output-dir
