@@ -83,17 +83,16 @@ scss                  html                sass --source-map %i %o
 own                   html                sh -c 'my-very-own.sh < %i > %o'
 ```
 
-The configuration file syntax is:
+Each converter configuration goes on its own line. Empty lines and lines starting with `#` are ignored
 
-- Empty lines and lines starting with '#' are ignored
-- Each converter configuration goes on its own line
-- Configuration fields are separated by one or more blanks:
-  1. A comma-separated list of input extensions (no intervening spaces!)
-  2. The target output extension
-  3. The rest of line is the converter command template with placeholders:
-     1. `%i` ➜ the input file name (required)
-     2. `%o` ➜ the output file name (optional, depending on converter)
-     3. Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
+Configuration fields (separated by one or more blanks) are:
+
+1. A comma-separated list of input extensions (no intervening spaces!)
+2. The target output extension
+3. The rest of line is the converter command template with placeholders:
+   - `%i` ➜ the input file name (required)
+   - `%o` ➜ the output file name (optional, depending on converter)
+   - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
 
 If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
 configuration to override built-in conversions when needed.
