@@ -83,28 +83,26 @@ own                   html                sh -c 'my-own.sh < %o > %i'
 md                    html                alt-markdown -i %i -o %o
 ```
 
+The configuration file syntax is:
+
+- Empty lines and lines starting with '#' are ignored
+- Each converter configuration goes on its own line
+- Configuration fields are separated by one or more blanks:
+  1. A comma-separated list of input extensions (no intervening spaces!)
+  2. The target output extension
+  3. The rest of line is the converter command template with substitutions:
+      - `%i` ➜ the input file name (required)
+      - `%o` ➜ the output file name (optional, depending on converter)
+      - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
+
+If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
+configuration to override built-in conversions when needed.
+
 When specifying a configuration file, the `dssg` command line syntax is, simply:
 
 ```bash
 dssg [-n | --no-delete] configuration-file input-directory output-directory
 ```
-
-Simple configuration file syntax:
-
-- Empty lines are ignored
-- Lines starting with '#' are comments
-- Each configuration goes on its own line
-- Fields are separated by one or more blanks
-- Configuration fields are:
-    1. A comma-separated list of input extensions (no intervening spaces!)
-    2. The target output extension
-    3. The rest of line is the converter command template with substitutions:
-        - `%i` ➜ the input file name (required)
-        - `%o` ➜ the output file name (optional. depending on converter)
-        - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
-
-If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
-configuration to override built-in conversions when needed.
 
 ## More on Usage
 
@@ -133,6 +131,7 @@ $ scala -classpath dssg_3-1.0.jar dssg.Main ...
 - Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
 - Converters might generate other files in addition to the output one (e.g. `sass`'s map files). These may be deleted on
 subsequent rebuilds if you don't specify `--no-delete`
+- There is currently no provision to exclude input files
 
 ___
 
