@@ -26,5 +26,5 @@ class BuilderMapperTest extends TestSuite :
     val result = intercept[IllegalArgumentException] {
       BuilderMapper.fromLines(lines)
     }
-    assert(result.getMessage.contains("No input file reference in config line #3"))
+    assert(result.getMessage.contains("Missing file reference(s) in config line #3"))
   }

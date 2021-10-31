@@ -4,18 +4,16 @@
 
 `dssg` is a minimalistic site generator imposing no directory structure or complex configuration.
 
-The mantra here is: _«Just convert my files and get out of the way»_
+The mantra here is _«just convert my files and get out of the way»_
 
 ## Usage
 
 `dssg` recursively copies over an input directory onto an output directory, such that:
 
-- Input files with registered extensions are converted to their target representation in the output directory. For
-  example, markdown files  (extension `md`) are converted to HTML (extension `html`)
-- Input files with an unregistered (or no) extension are copied verbatim to the output directory. This includes empty
-  directories
-- Conversion commands are executed only when input files have changed more recently that any output file counterparts
-- Files and directories originally present in the output directory but not in the input directory are deleted by default (unless `--no-delete` is in effect, see below)
+- Input files with an unregistered (or no) extension are copied verbatim
+- Input files with registered extensions are converted to their target representation
+- Conversion occurs only if input files are more recent than their output counterparts
+- Orphan files present in the output directory but not in the input directory are deleted
 
 Thus, if you have the following `input-directory` structure:
 
@@ -51,15 +49,6 @@ output-dir
 
 That's it: no mandated directory structure, no complex configuration files, no BS!
 
-## Skipping Orphan Output File Deletion
-
-If you want to retain output files not corresponding to any input file then pass the `--no-delete` (aka `-n`) flag 
-on command invocation:
-
-```bash
-dssg --no-delete input-directory output-directory
-```
-
 ## Simple Configuration
 
 Out of the box, `dssg` supports the following formats:
@@ -92,7 +81,6 @@ Configuration fields (separated by one or more blanks) are:
 3. The rest of line is the converter command template with placeholders:
    - `%i` ➜ the input file name
    - `%o` ➜ the output file name
-   - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
 
 If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
 configuration to override built-in conversions when needed.
@@ -100,7 +88,7 @@ configuration to override built-in conversions when needed.
 When specifying a configuration file, the `dssg` command line syntax is, simply:
 
 ```bash
-dssg [-n | --no-delete] configuration-file input-directory output-directory
+dssg configuration-file input-directory output-directory
 ```
 
 ## More on Usage
@@ -127,10 +115,9 @@ $ scala -classpath dssg_3-1.0.jar dssg.Main ...
 
 ## Known Issues
 
+- There's no provision to exclude input files
+- There's no provision not to delete orphan output files
 - Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
-- Converters might generate other files in addition to the output one (e.g. `sass`'s map files). These may be deleted on
-subsequent rebuilds if you don't specify `--no-delete`
-- There is currently no provision to exclude input files
 
 ___
 
@@ -190,7 +177,7 @@ This will create an executable file: `./target/graalvm-nartive-image/dssg`
 Once the native image is created, simply run it with:
 
 ```bash
-dssg [-n | --no-delete] [configuration-file] input-directory output-directory
+dssg [configuration-file] input-directory output-directory
 ```
 
 ### 2. Building a Java Fat Jar File
@@ -206,7 +193,7 @@ This will create a fat jar: `./target/scala-3.0.2/dssg-assembly-1.0.jar`
 Run with
 
 ```bash
-java -jar dssg-assembly-1.0.jar dssg.Main [-n | --no-delete] [configuration-file] input-directory output-directory
+java -jar dssg-assembly-1.0.jar dssg.Main [configuration-file] input-directory output-directory
 ```
 
 ### 3. Building a Scala Jar File
@@ -222,5 +209,5 @@ This will create a regular jar: `./target/scala-3.0.2/dssg_3-1.0.jar`
 Run with:
 
 ```bash
-scala -classpath dssg_3-1.0.jar dssg.Main [-n | --no-delete] [configuration-file] input-directory output-directory
+scala -classpath dssg_3-1.0.jar dssg.Main [configuration-file] input-directory output-directory
 ```

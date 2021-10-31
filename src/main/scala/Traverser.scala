@@ -17,12 +17,12 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
       .groupBy(_._1).view.mapValues(_.map(_._2))
       .toMap
 
-  def traverse(inputDirectory: File, outputDirectory: File, delete: Boolean = true): Seq[Action] =
+  def traverse(inputDirectory: File, outputDirectory: File): Seq[Action] =
     val plan = ArrayBuffer[Action]()
-    traverse(inputDirectory, outputDirectory, plan, delete)
+    traverse(inputDirectory, outputDirectory, plan)
     plan.toSeq
 
-  private def traverse(inputDirectory: File, outputDirectory: File, actions: ArrayBuffer[Action], delete: Boolean): Unit =
+  private def traverse(inputDirectory: File, outputDirectory: File, actions: ArrayBuffer[Action]): Unit =
 
     val inputFiles = inputDirectory.listFiles()
     val outputFiles = inputFiles.map(inputFile => File(outputDirectory, inputFile.getName))
@@ -32,15 +32,15 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
       (inputFile, outputFile) match
 
         case (inputDir, outputDir) if inputDir.isDirectory && outputDir.isDirectory =>
-          traverse(inputDir, outputDir, actions, delete)
+          traverse(inputDir, outputDir, actions)
 
         case (inputDir, outputFile) if inputDir.isDirectory && outputFile.isFile =>
           actions ++= Seq(Delete(outputFile), Mkdir(outputFile))
-          traverse(inputDir, outputFile, actions, delete)
+          traverse(inputDir, outputFile, actions)
 
         case (inputDir, outputFile) if inputDir.isDirectory && !outputFile.exists() =>
           actions += Mkdir(outputFile)
-          traverse(inputDir, outputFile, actions, delete)
+          traverse(inputDir, outputFile, actions)
 
         case (inputFile, outputFile) if inputFile.isFile =>
 
@@ -66,7 +66,7 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
                   addActionIfNeed(targetFile, Build(inputFile, targetFile, builderMapper.builder))
     }
 
-    if delete && outputDirectory.exists() then
+    if outputDirectory.exists() then
       outputDirectory.listFiles()
         .map(outputFile => (outputFile, File(inputDirectory, outputFile.getName)))
         .filterNot((outputFile, inputFile) =>
