@@ -56,18 +56,19 @@ Out of the box, `dssg` supports the following formats:
 | SASS  | `sass %i %o`  | `npm i -g sass` |
 | Typescript | `npx swc -o %o %i` | `npm i -D @swc/core @swc/cli` |
 | AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
+| Pug | `sh -c 'pug < %i  > %o'` | `npm i -g pug` |
 | Markdown | `pandoc -s -o %o %i` | Linux: `apt install pandoc` <br>Mac: `brew install pandoc` <br>Windows: `choco install pandoc` |
 
 👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use! Also, you may
 choose converters other than the ones listed above; read on.
 
-Say you want a different Markdown processor, a customized SASS conversion, and a new conversion of your own. Your configuration file may look like:
+Say you want to use some specific Pandoc Markdown template and a new conversion type of your own. Your configuration 
+file may look like:
 
 ```
 # Input extension(s)  # Output extension  # Command line template
-md,markdown           html                alt-markdown %i %o
-scss                  html                sass --source-map %i %o
-own                   html                sh -c 'my-very-own.sh < %i > %o'
+md,markdown           html                pandoc --template=specific -o %o %i
+mine                  html                sh -c 'my-own-converter.sh < %i > %o'
 ```
 
 Each converter configuration goes on its own line. Empty lines and lines starting with `#` are ignored
