@@ -53,7 +53,8 @@ object BuilderMapper:
       .map { (line, lineNumber) =>
         line match
           case FieldRegex(inputExtensionList, outputExtension, commandLine) =>
-            require(containsPlaceholders(commandLine), s"Missing file reference(s) in config line #$lineNumber: $line")
+            require(commandLine.contains(InputPlaceholder) && commandLine.contains(OutputPlaceholder),
+              s"Missing file reference(s) in config line #$lineNumber: $line")
             val inputExtensions = inputExtensionList.split(",").toSeq
             val commandLineTemplate = (inputFilename: String, outputFilename: String) =>
               val inputReplacement = commandLine.replace(InputPlaceholder, inputFilename)
@@ -62,6 +63,3 @@ object BuilderMapper:
           case _ =>
             throw IllegalArgumentException(s"Invalid config line #$lineNumber: $line")
       }
-
-  def containsPlaceholders(commandLine: String) =
-    commandLine.contains(InputPlaceholder) && commandLine.contains(OutputPlaceholder)
