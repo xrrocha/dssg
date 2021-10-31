@@ -1,3 +1,0 @@
-== More AsciiDoc
-
-Yeah: more AsciiDoc!

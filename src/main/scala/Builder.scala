@@ -29,11 +29,12 @@ case class BuilderMapper(inputExtensions: Seq[String], outputExtension: String, 
 object BuilderMapper:
 
   val DefaultMappers = Seq(
-    BuilderMapper(Seq("ts"), "js", OSCommandBuilder((in, out) => s"npx swc --out-file $out $in")),
+    BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor --out-file $out $in")),
+    BuilderMapper(Seq("md"), "html", OSCommandBuilder((in, out) => s"pandoc --standalone --output $out $in")),
     BuilderMapper(Seq("pug"), "html", OSCommandBuilder((in, out) => s"sh -c 'pug < $in > $out'")),
     BuilderMapper(Seq("scss"), "css", OSCommandBuilder((in, out) => s"sass --no-source-map $in $out")),
-    BuilderMapper(Seq("md"), "html", OSCommandBuilder((in, out) => s"pandoc --standalone --output $out $in")),
-    BuilderMapper(Seq("ad", "adoc"), "html", OSCommandBuilder((in, out) => s"asciidoctor --out-file $out $in")))
+    BuilderMapper(Seq("ts"), "js", OSCommandBuilder((in, out) => s"npx swc --out-file $out $in")),
+  )
 
   private val InputPlaceholder = "%i"
   private val OutputPlaceholder = "%o"

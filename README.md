@@ -53,11 +53,11 @@ Out of the box, `dssg` supports the following formats:
 
 | Format | Internal Command Line | Install with |
 | ------ | --------------------- | ------------ |
+| AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
+| Markdown | `pandoc -s -o %o %i` | Linux: `apt install pandoc` <br>Mac: `brew install pandoc` <br>Windows: `choco install pandoc` |
+| Pug | `sh -c 'pug < %i  > %o'` | `npm i -g pug` |
 | SASS  | `sass %i %o`  | `npm i -g sass` |
 | Typescript | `npx swc -o %o %i` | `npm i -D @swc/core @swc/cli` |
-| AsciiDoc | `asciidoctor -o %o %i` | `npm i -g asciidoctor` |
-| Pug | `sh -c 'pug < %i  > %o'` | `npm i -g pug` |
-| Markdown | `pandoc -s -o %o %i` | Linux: `apt install pandoc` <br>Mac: `brew install pandoc` <br>Windows: `choco install pandoc` |
 
 👉 To use `dssg` it is _**not**_ necessary to install any above dependency that you don't intend to use! Also, you may
 choose converters other than the ones listed above; read on.
