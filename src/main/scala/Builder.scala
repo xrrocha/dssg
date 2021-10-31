@@ -57,8 +57,9 @@ object BuilderMapper:
               s"Missing file reference(s) in config line #$lineNumber: $line")
             val inputExtensions = inputExtensionList.split(",").toSeq
             val commandLineTemplate = (inputFilename: String, outputFilename: String) =>
-              val inputReplacement = commandLine.replace(InputPlaceholder, inputFilename)
-              commandLine.replace(OutputPlaceholder, outputFilename)
+              commandLine
+                .replace(InputPlaceholder, inputFilename)
+                .replace(OutputPlaceholder, outputFilename)
             BuilderMapper(inputExtensions, outputExtension, OSCommandBuilder(commandLineTemplate))
           case _ =>
             throw IllegalArgumentException(s"Invalid config line #$lineNumber: $line")
