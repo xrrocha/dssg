@@ -88,9 +88,9 @@ The configuration file syntax is:
 - Empty lines and lines starting with '#' are ignored
 - Each converter configuration goes on its own line
 - Configuration fields are separated by one or more blanks:
-  1. A comma-separated list of input extensions (no intervening spaces!)
-  2. The target output extension
-  3. The rest of line is the converter command template with substitutions:
+  1) A comma-separated list of input extensions (no intervening spaces!)
+  2) The target output extension
+  3) The rest of line is the converter command template with substitutions:
      - `%i` ➜ the input file name (required)
      - `%o` ➜ the output file name (optional, depending on converter)
      - Use double percentage sign to escape literals if needed (`%%i`, `%%o`)
