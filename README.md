@@ -30,7 +30,7 @@ input-directory
 then the command:
 
 ```bash
-dssg input-directory output-directory
+$ dssg input-directory output-directory
 ```
 
 will build `output-directory` so that it contains:
@@ -100,7 +100,7 @@ mine                  html                sh -c 'my-own-converter.sh < %i > %o'
 When specifying a configuration file, the `dssg` command line syntax is, simply:
 
 ```bash
-dssg configuration-file input-directory output-directory
+$ dssg configuration-file input-directory output-directory
 ```
 
 ## More on Usage
@@ -161,7 +161,7 @@ After GraalVM is installed and selected, install its _native image support_ comp
 operation:
 
 ```bash
-gu install native-image
+$ gu install native-image
 ```
 
 Command `gu` (GraalVM component updater) is located under `$GRAALVM_HOME/bin`.
@@ -171,7 +171,7 @@ Command `gu` (GraalVM component updater) is located under `$GRAALVM_HOME/bin`.
 Create an all-inclusive fat jar with:
 
 ```bash
-sbt assembly
+$ sbt assembly
 ```
 
 ### 1.3. Build a Native Image
@@ -181,7 +181,7 @@ sbt assembly
 Next, build the native image with:
 
 ```bash
-sbt graalvm-native-image:packageBin
+$ sbt graalvm-native-image:packageBin
 ```
 
 This will create an executable file: `./target/graalvm-nartive-image/dssg`
@@ -191,7 +191,7 @@ This will create an executable file: `./target/graalvm-nartive-image/dssg`
 Once the native image is created, simply run it with:
 
 ```bash
-dssg [configuration-file] input-directory output-directory
+$ dssg [configuration-file] input-directory output-directory
 ```
 
 ### 2. Building a Java Fat Jar File
@@ -199,7 +199,7 @@ dssg [configuration-file] input-directory output-directory
 If you want just Java in your installation, not Scala, run:
 
 ```bash
-sbt assembly
+$ sbt assembly
 ```
 
 This will create a fat jar: `./target/scala-3.0.2/dssg-assembly-1.0.jar`
@@ -207,7 +207,7 @@ This will create a fat jar: `./target/scala-3.0.2/dssg-assembly-1.0.jar`
 Run with
 
 ```bash
-java -jar dssg-assembly-1.0.jar dssg.Main [configuration-file] input-directory output-directory
+$ java -jar dssg-assembly-1.0.jar dssg.Main [configuration-file] input-directory output-directory
 ```
 
 ### 3. Building a Scala Jar File
@@ -223,5 +223,5 @@ This will create a regular jar: `./target/scala-3.0.2/dssg_3-1.0.jar`
 Run with:
 
 ```bash
-scala -classpath dssg_3-1.0.jar dssg.Main [configuration-file] input-directory output-directory
+$ scala -classpath dssg_3-1.0.jar dssg.Main [configuration-file] input-directory output-directory
 ```
