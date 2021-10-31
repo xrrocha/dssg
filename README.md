@@ -86,8 +86,10 @@ Configuration fields (separated by one or more blanks) are:
 👉 If the same input extension is specified than once, the last occurrence wins. This policy enables user-provided 
 configuration to override built-in conversions when needed.
 
-You can easily customize these defaults! Say you want to use a Pandoc Markdown template called _stencil_ and a new
-conversion type of your own. Your configuration file may look like:
+You can easily customize these defaults! 
+
+Say you want to use a Pandoc Markdown template called _stencil_ and a new conversion type of your own. Your 
+configuration file may look like:
 
 ```
 # Input extension(s)  # Output extension  # Command line template
