@@ -93,9 +93,9 @@ Say you want to use a Pandoc Markdown template called _stencil_ and a new conver
 configuration file may look like:
 
 ```
-# Input extension(s)  # Output extension  # Command line template
-md,markdown           html                pandoc --template=stencil -o %o %i
-mine                  html                sh -c 'my-own-converter.sh < %i > %o'
+# Input extension(s)  # Output extension(s)  # Command line template
+md,markdown           html                   pandoc --template=stencil -o %o %i
+mine                  html                   sh -c 'my-own-converter.sh < %i > %o'
 ```
 
 When specifying a configuration file, the `dssg` command line syntax is, simply:
