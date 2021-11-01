@@ -1,6 +1,6 @@
-# Input extension(s)  # Output extension  # Command line template
-ad,adoc               html                asciidoctor --out-file %o %i
-md                    html                pandoc --standalone --output %o %i
-pug                   html                sh -c 'pug < %i > %o'
-scss                  css,css.map         sass %i %o
-ts                    js,js.map           npx swc --out-file %o %i
+# Input extension(s)  # Output extension(s)  # Command line template
+ad,adoc               html                   asciidoctor --out-file %o %i
+md                    html                   pandoc --standalone --output %o %i
+pug                   html                   sh -c 'pug < %i > %o'
+scss                  css,css.map            sass %i %o
+ts                    js,js.map              npx swc --out-file %o %i
