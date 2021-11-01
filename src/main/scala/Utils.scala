@@ -4,7 +4,7 @@ import java.io.{File, InputStream, OutputStream}
 
 extension (file: File)
   def splitByExtension: (String, Option[String]) =
-    val pos = file.getName.lastIndexOf('.')
+    val pos = file.getName.indexOf('.')
     if (pos < 1) (file.getName, None)
     else (file.getName.substring(0, pos), Some(file.getName.substring(pos + 1)))
 

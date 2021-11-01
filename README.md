@@ -65,25 +65,26 @@ choose converters other than the ones listed above; read on.
 The built-in `configuration.txt` resource file provisioning the above formats contains:
 
 ```
-# Input extension(s)  # Output extension  # Command line template
-ad,adoc               html                asciidoctor --out-file %o %i
-md                    html                pandoc --standalone --output %o %i
-pug                   html                sh -c 'pug < %i > %o'
-scss                  css                 sass --no-source-map %i %o
-ts                    js                  npx swc --out-file %o %i
+# Input extension(s)  # Output extension(s)  # Command line template
+ad,adoc               html                   asciidoctor --out-file %o %i
+md                    html                   pandoc --standalone --output %o %i
+pug                   html                   sh -c 'pug < %i > %o'
+scss                  css,css.map            sass %i %o
+ts                    js,js.map              npx swc --out-file %o %i
 ```
 
 Each converter configuration goes on its own line. Empty lines and lines starting with `#` are ignored
 
 Configuration fields (separated by one or more blanks) are:
 
-1. A comma-separated list of input extensions (no intervening spaces!)
-2. The target output extension
+1. The comma-separated list of input extensions (no intervening spaces!)
+2. The comma-separated list of output extensions (no intervening spaces!): a main target extension and zero or more 
+   extra extensions created by the converter (e.g. sourcemaps)
 3. The rest of line is the converter command template with placeholders:
    - `%i` ➜ the input file name
    - `%o` ➜ the output file name
 
-👉 If the same input extension is specified more than once, the last occurrence wins. This policy enables 
+👉 If the same _input_ extension is specified more than once, the last occurrence wins. This policy enables 
 user-provided configuration to override built-in conversions when needed.
 
 You can easily customize these defaults! 
@@ -127,11 +128,8 @@ $ scala -classpath dssg_3-0.1.0.jar dssg.Main ...
 
 ## Known Issues
 
-- There's no provision to exclude input files
-- There's no provision not to delete orphan output files
-- Multi-part extensions are not supported. E.g. `.d.ts` in Typescript descriptor files
-- Converters may generate additional files (e.g. `sass`'s sourcemap files.) These files may be deleted on subsequent 
-  builds. _This is being addressed_.
+- There's currently no provision to exclude certain input files
+- There's currently no provision to skip deletion of orphan output files
 ___
 
 ## Build Options

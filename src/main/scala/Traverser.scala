@@ -13,11 +13,9 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
 
   private val builderMappersByOutputExtension: Map[String, Seq[BuilderMapper]] =
     builderMappers
-      .map(bm => (bm.outputExtension, bm))
+      .flatMap(bm => bm.outputExtensions.map((_, bm)))
       .groupBy(_._1).view.mapValues(_.map(_._2))
       .toMap
-
-  // TODO Create map of per-output extension list of extra output extensions
 
   def traverse(inputDirectory: File, outputDirectory: File): Seq[Action] =
     val plan = ArrayBuffer[Action]()
@@ -64,7 +62,7 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
                   addActionIfNeed(outputFile, Copy(inputFile, outputFile))
 
                 case Some(builderMapper) =>
-                  val targetFile = File(outputDirectory, s"$baseName.${builderMapper.outputExtension}")
+                  val targetFile = File(outputDirectory, s"$baseName.${builderMapper.outputExtensions.head}")
                   addActionIfNeed(targetFile, Build(inputFile, targetFile, builderMapper.builder))
     }
 
@@ -76,7 +74,6 @@ class Traverser(builderMappers: Seq[BuilderMapper]):
         .map { (outputFile, inputFile) =>
           if outputFile.isDirectory then (outputFile, inputFile)
           else
-          // TODO Don't delete legit files with extra output extensions
             outputFile.splitByExtension match
               case (_, None) => (outputFile, inputFile)
               case (baseName, Some(extension)) =>
