@@ -24,7 +24,10 @@ class OSCommandBuilder(commandTemplate: (String, String) => String) extends Buil
   class IOStreamCollector(outputStream: OutputStream) extends ((InputStream) => Unit) :
     override def apply(inputStream: InputStream): Unit = inputStream.copyTo(outputStream)
 
-case class BuilderMapper(inputExtensions: Seq[String], outputExtension: String, builder: Builder)
+case class BuilderMapper(inputExtensions: Seq[String],
+                         outputExtension: String,
+                         extraOutputExtensions: Seq[String],
+                         builder: Builder)
 
 object BuilderMapper:
 
@@ -52,15 +55,21 @@ object BuilderMapper:
       .filterNot((line, _) => line.isEmpty || line.startsWith("#"))
       .map { (line, lineNumber) =>
         line match
-          case FieldRegex(inputExtensionList, outputExtension, commandLine) =>
+          case FieldRegex(inputExtensionList, outputExtensionList, commandLine) =>
             require(commandLine.contains(InputPlaceholder) && commandLine.contains(OutputPlaceholder),
               s"Missing file reference(s) in config line #$lineNumber: $line")
             val inputExtensions = inputExtensionList.split(",").toSeq
+            val outputExtensions = outputExtensionList.split(",")
+            val outputExtension = outputExtensions.head
+            val extraOutputExtensions = outputExtensions.drop(1).toSeq
             val commandLineTemplate = (inputFilename: String, outputFilename: String) =>
               commandLine
                 .replace(InputPlaceholder, inputFilename)
                 .replace(OutputPlaceholder, outputFilename)
-            BuilderMapper(inputExtensions, outputExtension, OSCommandBuilder(commandLineTemplate))
+            BuilderMapper(inputExtensions,
+                          outputExtension,
+                          extraOutputExtensions,
+                          OSCommandBuilder(commandLineTemplate))
           case _ =>
             throw IllegalArgumentException(s"Invalid config line #$lineNumber: $line")
       }
