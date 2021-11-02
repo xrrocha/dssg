@@ -6,4 +6,5 @@
 *.log
 .project/project
 .project/target
+releases/
 target/
